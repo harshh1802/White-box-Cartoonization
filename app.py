@@ -75,3 +75,8 @@ async def cartoonize_endpoint(file: UploadFile = File(...)):
         return FileResponse(temp_file.name, media_type="image/png")
     except Exception as e:
         return {"error": str(e)}
+
+@app.get("/test/")
+async def cartoonize_endpoint():
+    return FileResponse("1.jpeg", media_type="image/png")
+
