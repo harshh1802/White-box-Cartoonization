@@ -72,11 +72,16 @@ async def cartoonize_endpoint(file: UploadFile = File(...)):
         tf.compat.v1.keras.backend.clear_session()
         tf.compat.v1.reset_default_graph()
 
+        print(temp_file.name)
+
         return FileResponse(temp_file.name, media_type="image/png")
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/test/")
-async def cartoonize_endpoint():
-    return FileResponse("1.jpeg", media_type="image/png")
+@app.get("/file/{file_name}")
+async def cartoonize_endpoint(file_name):
+    try:
+        return FileResponse(file_name, media_type="image/png")
+    except:
+        return "NO File"
 
