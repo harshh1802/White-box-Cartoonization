@@ -10,6 +10,16 @@ import io
 import network
 import guided_filter
 from tempfile import NamedTemporaryFile 
+import uuid
+import time
+
+
+
+def generate_random_filename(extension=".png"):
+    timestamp = int(time.time())
+    unique_id = str(uuid.uuid4().hex)[:8]  # Using first 8 characters of UUID
+    filename = f"{timestamp}_{unique_id}{extension}"
+    return filename
 
 model_path = r"./saved_models/"
 
@@ -65,16 +75,21 @@ async def cartoonize_endpoint(file: UploadFile = File(...)):
 
         _, output_buffer = cv2.imencode(".png", output_image)
         
-        with NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-            temp_file.write(output_buffer)
+        # with NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
+        #     temp_file.write(output_buffer)
+
+        random_file_name = generate_random_filename()
+
+        with open(random_file_name, "wb") as file:
+            file.write(output_buffer)
 
         # Clear TensorFlow default session and graph
         tf.compat.v1.keras.backend.clear_session()
         tf.compat.v1.reset_default_graph()
 
-        print(temp_file.name)
 
-        return FileResponse(temp_file.name, media_type="image/png")
+        # return FileResponse(temp_file.name, media_type="image/png")
+        return {"filename":random_file_name}
     except Exception as e:
         return {"error": str(e)}
 
