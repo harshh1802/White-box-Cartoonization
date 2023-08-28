@@ -89,7 +89,7 @@ async def cartoonize_endpoint(file: UploadFile = File(...)):
 
 
         # return FileResponse(temp_file.name, media_type="image/png")
-        return {"filename":random_file_name}
+        return random_file_name
     except Exception as e:
         return {"error": str(e)}
 
